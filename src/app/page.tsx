@@ -41,7 +41,7 @@ export default function Home() {
         </ContainerScroll>
       </div>
 
-      <div className="h-[40rem] w-full flex items-center justify-center ">
+      {/* <div className="h-[40rem] w-full flex items-center justify-center ">
         <PinContainer title="Kurtarıcı" href="https://www.karasuacicikurtarici.com/" className="overflow-x-hidden">
         <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[20rem] ">
           <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
@@ -58,7 +58,7 @@ export default function Home() {
             </div>
         </div>
         </PinContainer>
-      </div>
+      </div> */}
 
       <div className="fixed bottom-3 md:flex justify-center items-center w-screen z-50">
         <FloatingDock items={sidebarLinks} mobileClassName="flex" />
