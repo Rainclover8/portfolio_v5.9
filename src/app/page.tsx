@@ -10,9 +10,14 @@ import { Card, ContainerScroll } from "./components/ui/container-scroll-animatio
 import { FloatingDock } from "./components/ui/floating-dock";
 import { ShootingStars } from "./components/ui/shooting-stars";
 import { TextGenerateEffect } from "./components/ui/text-generate-effect";
-import Image from 'next/image';
-import Link from 'next/Link';
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+
+// API'den dönen veri tipini tanımlayın
+interface HomePageData {
+  title: string;
+}
 
 const sidebarLinks = [
   { title: "Ana Sayfa", href: "/", icon: <IconHome size={24} /> },
@@ -23,25 +28,28 @@ const sidebarLinks = [
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
-    const [data, setData] = useState([])
-
-    useEffect(() => {
-      fetch('http://localhost:1337/api/home-page')
-      .then(res => res.json())
-      .then(data => setData(data.data));
-    }, [])
-
-  // MotionValue oluşturuyoruz
   const rotate = useTransform(scrollYProgress, [0, 1], [20, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [3, 1]);
   const translate = useTransform(scrollYProgress, [0, 1], [20, 0]);
 
+  // State'i doğru bir tipte başlatın
+  const [data, setData] = useState<HomePageData | null>(null);
+
+  useEffect(() => {
+    fetch("http://localhost:1337/api/home-page")
+      .then((res) => res.json())
+      .then((response) => setData(response.data)) // API'nin doğru şekilde döndüğünü varsayıyoruz
+      .catch((error) => console.error("Veri çekme hatası:", error));
+  }, []);
+
   return (
     <div className="relative overflow-x-hidden">
-     <div className="absolute z-[99]">
-     <h1 className="text-7xl text-white">{data.title}</h1>
-      <Link href="http://localhost:1337/admin" target="_blank" className="z-50">LOGIN</Link>
-     </div>
+      <div className="absolute z-[99]">
+        <h1 className="text-7xl text-white">{data?.title || "Yükleniyor..."}</h1>
+        <Link href="http://localhost:1337/admin" target="_blank" className="z-50">
+          LOGIN
+        </Link>
+      </div>
       <ShootingStars minDelay={200} maxSpeed={10} maxDelay={2000} />
       <TextGenerateEffect
         duration={2}
@@ -63,9 +71,7 @@ export default function Home() {
       </div>
 
 
-      
-
- {/* <div className="h-[40rem] w-full flex items-center justify-center ">
+{/* <div className="h-[40rem] w-full flex items-center justify-center ">
         <PinContainer title="Kurtarıcı" href="https://www.karasuacicikurtarici.com/" className="overflow-x-hidden">
         <div className="flex basis-full flex-col p-4 tracking-tight text-slate-100/50 sm:basis-1/2 w-[20rem] h-[20rem] ">
           <h3 className="max-w-xs !pb-2 !m-0 font-bold  text-base text-slate-100">
@@ -83,6 +89,8 @@ export default function Home() {
         </div>
         </PinContainer>
       </div> */}
+
+
       <div className="fixed bottom-3 md:flex justify-center items-center w-screen z-50">
         <FloatingDock items={sidebarLinks} mobileClassName="flex" />
       </div>
